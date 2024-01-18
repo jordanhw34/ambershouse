@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <title>Amber's House Bed & Breakfast</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/css/datepicker-bs5.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://unpkg.com/notie/dist/notie.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="static/css/style.css" />
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">Amber's House</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="index.html"
+              >Home <span class="sr-only">(current)</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">About</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdownMenuLink"
+              role="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Rooms
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="bilbo.html">Bilbo's Suite</a>
+              <a class="dropdown-item" href="frodo.html">Frodo's Quarters</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="reservation.html">Book Now</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact.html">Contact</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container-fluid mx-auto">
+      <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+          <h1 class="text-center mt-4">Search for Availability</h1>
+          <div>
+            <form
+              action="/reservation.html"
+              method="get"
+              class="needs-validation"
+              novalidate
+            >
+              <div class="form-row mb-3">
+                <div class="col">
+                  <div id="foo" class="form-row">
+                    <div class="col">
+                      <label for="start" class="form-label"
+                        >Check-in Date</label
+                      >
+                      <input
+                        type="text"
+                        name="start"
+                        class="form-control"
+                        required
+                      />
+                    </div>
+                    <div class="col">
+                      <label for="end" class="form-label">Check-out Date</label>
+                      <input
+                        type="text"
+                        name="end"
+                        class="form-control"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary">
+                Search Availability
+              </button>
+            </form>
+          </div>
+          <div class="row">
+            <div class="col">
+              <button id="notify" class="btn btn-outline-secondary mt-3">
+                Notie Alert Test
+              </button>
+            </div>
+            <div class="col">
+              <button id="sweetAlert" class="btn btn-outline-secondary mt-3">
+                Sweet Alert Test
+              </button>
+            </div>
+            <div class="col">
+              <button id="toastBtn" class="btn btn-outline-secondary mt-3">
+                Toast Btn
+              </button>
+            </div>
+            <div class="col">
+              <button id="successBtn" class="btn btn-outline-secondary mt-3">
+                Success Btn
+              </button>
+            </div>
+            <div class="col">
+              <button id="errorBtn" class="btn btn-outline-secondary mt-3">
+                Error Btn
+              </button>
+            </div>
+            <div class="col">
+              <button id="checkBtn" class="btn btn-outline-secondary mt-3">
+                Check Avail Btn
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-3"></div>
+      </div>
+    </div>
+
+    <footer class="my-footer">
+      <div class="row">
+        <div class="col">left</div>
+
+        <div class="col">center</div>
+
+        <div class="col">right</div>
+      </div>
+    </footer>
+
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
+    <script src="https://unpkg.com/notie"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+      let attention = Prompt();
+
+      // Example starter JavaScript for disabling form submissions if there are invalid fields
+      (() => {
+        "use strict";
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll(".needs-validation");
+
+        // Loop over them and prevent submission
+        Array.from(forms).forEach((form) => {
+          form.addEventListener(
+            "submit",
+            (event) => {
+              if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+
+              form.classList.add("was-validated");
+            },
+            false
+          );
+        });
+      })();
+
+      function notify(msgType, msg) {
+        notie.alert({
+          //type: Number|String, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
+          type: msgType,
+          text: msg,
+          stay: false,
+          time: 2,
+          position: "top",
+        });
+      }
+
+      let notifyBtn = document.getElementById("notify");
+      notifyBtn.addEventListener("click", () => {
+        notify("warning", "This worked, woo hoo!");
+      });
+
+      // Sweet Alert Test
+      let sweetAlertBtn = document.getElementById("sweetAlert");
+      sweetAlertBtn.addEventListener("click", () => {
+        Swal.fire({
+          title: "Success!",
+          text: "Do you want to continue",
+          icon: "success",
+          confirmButtonText: "Cool",
+        });
+      });
+
+      function notifyModal(title, text, icon, confirmButtonText) {
+        Swal.fire({
+          title: title,
+          text: text,
+          icon: icon,
+          confirmButtonText: confirmButtonText,
+        });
+      }
+
+      // Date Picker
+      const elem = document.getElementById("foo");
+      const rangepicker = new DateRangePicker(elem, {
+        // ...options
+      });
+
+      //   const elem2 = document.getElementById("fooBar");
+      //   const rangepicker2 = new DateRangePicker(elem2, {
+      //     // ...options
+      //   });
+
+      let toastBtn = document.getElementById("toastBtn");
+      toastBtn.addEventListener("click", () => {
+        attention.toast({
+          title: "Hi Jordan",
+          icon: "error",
+        });
+      });
+
+      let successBtn = document.getElementById("successBtn");
+      successBtn.addEventListener("click", () => {
+        attention.success({
+          title: "this is the title",
+          text: "this is the text",
+        });
+      });
+
+      let errorBtn = document.getElementById("errorBtn");
+      errorBtn.addEventListener("click", () => {
+        attention.error({
+          title: "this is the title",
+          text: "this is the text",
+        });
+      });
+
+      let checkBtn = document.getElementById("checkBtn");
+      checkBtn.addEventListener("click", () => {
+        let html = `
+        <form id="check-availability-form" action="" method="post" novalidate class="needs-validation">
+            <div id="reservation-dates-modal" class="form-row">
+                <div class="col">
+                    <label for="start" class="form-label">Check-in Date</label>
+                    <input disabled required class="form-control" type="text" name="start" id="start" />
+                </div>
+                <div class="col">
+                    <label for="end" class="form-label">Check-out Date</label>
+                    <input disabled required class="form-control" type="text" name="end" id="end" />
+                </div>
+            </div>
+        </form><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        `;
+
+        attention.custom({
+          title: "Check for available dates",
+          html: html,
+        });
+      });
+
+      function Prompt() {
+        let toast = (c) => {
+          const {
+            title = "",
+            icon = "success",
+            position = "top-end", // top-start, top-center, top-end
+          } = c;
+
+          const Toast = Swal.mixin({
+            toast: true,
+            title: title,
+            position: position,
+            icon: icon,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({});
+        };
+
+        let success = (c) => {
+          const { title = "", text = "" } = c;
+          Swal.fire({
+            icon: "success",
+            title: title,
+            text: text,
+          });
+        };
+
+        let error = (c) => {
+          const { title = "", text = "" } = c;
+          Swal.fire({
+            icon: "error",
+            title: title,
+            text: text,
+          });
+        };
+
+        let custom = async (c) => {
+          const { title = "Def Mult Inputs", html = "" } = c;
+
+          const { value: formValues } = await Swal.fire({
+            title: title,
+            html: html,
+            focusConfirm: true,
+            backdrop: true,
+            showCancelButton: true,
+            willOpen: () => {
+              const popupForm = document.getElementById(
+                "reservation-dates-modal"
+              );
+              const rangePicker2 = new DateRangePicker(popupForm, {});
+            },
+            didOpen: () => {
+              document.getElementById("start").removeAttribute("disabled");
+              document.getElementById("end").removeAttribute("disabled");
+            },
+            preConfirm: () => {
+              return [
+                document.getElementById("start").value,
+                document.getElementById("end").value,
+              ];
+            },
+          });
+          if (formValues) {
+            Swal.fire(JSON.stringify(formValues));
+          }
+        };
+
+        return {
+          toast: toast,
+          success: success,
+          error: error,
+          custom: custom,
+        };
+      }
+    </script>
+  </body>
+</html>
