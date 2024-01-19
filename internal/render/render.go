@@ -7,8 +7,9 @@ import (
 	"path/filepath"
 	"text/template"
 
-	"github.com/jordanhw34/ambershouse/pkg/config"
-	"github.com/jordanhw34/ambershouse/pkg/models"
+	"github.com/jordanhw34/ambershouse/internal/config"
+	"github.com/jordanhw34/ambershouse/internal/models"
+	"github.com/justinas/nosurf"
 )
 
 // Application Config
@@ -19,16 +20,18 @@ func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 
-func AddDefaultData(td *models.TemplateData) *models.TemplateData {
+func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
 	// stringMap := make(map[string]string)
 	// stringMap["siteTitle"] = "webapp1 go app from udemy"
+	td.CSRFToken = nosurf.Token(r)
 	return td
 }
 
 // RenderTemplate => renders an html template
-func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData) {
+func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) {
 
 	var templateCache map[string]*template.Template
+
 	if app.UseCache {
 		// Get Template Cache from Application Config
 		templateCache = app.TemplateCache
@@ -46,7 +49,7 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData)
 	buf := new(bytes.Buffer)
 
 	// Get Default Data
-	td = AddDefaultData(td)
+	td = AddDefaultData(td, r)
 
 	// Execute the template
 	_ = template.Execute(buf, td)
@@ -77,7 +80,7 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 		//log.Println("ranging template pages, current page name =", page)		// e.x. templates\about.page.html
 		// page is the full path to the template but we only want the base name
 		name := filepath.Base(page)
-		log.Println(" > ranging template pages, current template name =", name)
+		log.Println(" > Building Template Cache for Page =", name)
 
 		// now we need to parse the file
 		templateSet, err := template.New(name).ParseFiles(page)

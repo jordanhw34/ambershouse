@@ -1,15 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"time"
 
 	"github.com/alexedwards/scs/v2"
-	"github.com/jordanhw34/ambershouse/pkg/config"
-	"github.com/jordanhw34/ambershouse/pkg/handlers"
-	"github.com/jordanhw34/ambershouse/pkg/render"
+	"github.com/jordanhw34/ambershouse/internal/config"
+	"github.com/jordanhw34/ambershouse/internal/handlers"
+	"github.com/jordanhw34/ambershouse/internal/render"
 )
 
 const host = "localhost:"
@@ -53,7 +52,12 @@ func main() {
 	// Now we need to give render access to the Application Config Variable [app] - passing in reference to app config variable
 	render.NewTemplates(&app)
 
-	fmt.Printf("Attemping to start server on port %s\n", port)
+	if app.InProduction {
+		log.Println(" > The app is in Production Mode")
+	} else {
+		log.Println(" > The app is in Development Mode")
+	}
+	log.Println(" > Attemping to start server on port", port)
 
 	server := &http.Server{
 		Addr:    host + port,

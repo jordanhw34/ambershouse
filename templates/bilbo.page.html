@@ -1,0 +1,92 @@
+{{template "base" .}} {{define "content"}}
+
+<div class="container-fluid mx-auto">
+  <div class="row">
+    <div class="col">
+      <h1 class="text-center mt-4">Bilbo's Suite</h1>
+    </div>
+  </div>
+
+  <div class="row text-center mx-auto">
+    <div class="col">
+      <img
+        src="/static/img/bilbo.jpg"
+        class="img-fluid room-image"
+        alt="bilbo room"
+      />
+      <p></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col text-center">
+      <a id="check-availability-button" href="#!" class="btn btn-success"
+        >Check Availability</a
+      >
+    </div>
+  </div>
+</div>
+
+{{end}} {{define "js"}}
+
+<script>
+  let attention = Prompt();
+
+  let checkBtn = document.getElementById("check-availability-button");
+  checkBtn.addEventListener("click", () => {
+    let html = `
+      <form id="check-availability-form" action="" method="post" novalidate class="needs-validation">
+          <div id="reservation-dates-modal" class="form-row">
+              <div class="col">
+                  <label for="start" class="form-label">Check-in Date</label>
+                  <input disabled required class="form-control" type="text" name="start" id="start" />
+              </div>
+              <div class="col">
+                  <label for="end" class="form-label">Check-out Date</label>
+                  <input disabled required class="form-control" type="text" name="end" id="end" />
+              </div>
+          </div>
+      </form>
+      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+      `;
+
+    attention.custom({
+      title: "Check for available dates",
+      html: html,
+      willOpen: () => {
+        const popupForm = document.getElementById("reservation-dates-modal");
+        const rangePicker2 = new DateRangePicker(popupForm, {
+          format: "yyyy-mm-dd",
+          showOnFocus: true,
+        });
+      },
+      didOpen: () => {
+        document.getElementById("start").removeAttribute("disabled");
+        document.getElementById("end").removeAttribute("disabled");
+      },
+      callback: (result) => {
+        console.log(
+          "Called the callback in Prompt.custom() with result = ${result}"
+        );
+
+        let form = document.getElementById("check-availability-form");
+        let formData = new FormData(form);
+        // appending token to the formData instead of adding hidden input field
+        formData.append("csrf_token", "{{.CSRFToken}}");
+
+        fetch("reservations-room", {
+          method: "post",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            console.log(data.ok);
+            console.log(data.message);
+          });
+      },
+    });
+  });
+</script>
+
+{{end}}
