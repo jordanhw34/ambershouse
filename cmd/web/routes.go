@@ -14,7 +14,6 @@ func routes(app *config.AppConfig) http.Handler {
 	mux := chi.NewRouter()
 
 	mux.Use(middleware.Recoverer)
-	mux.Use(WriteToConsole)
 	mux.Use(NoSurf)
 	mux.Use(SessionLoad)
 
@@ -22,11 +21,20 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/about", handlers.Repo.About)
 	mux.Get("/bilbo", handlers.Repo.Bilbo)
 	mux.Get("/frodo", handlers.Repo.Frodo)
+
 	mux.Get("/reservations", handlers.Repo.Reservations)
 	mux.Post("/reservations", handlers.Repo.PostReservations)
-	mux.Post("/reservations-room", handlers.Repo.PostReservationsRoom) // change back to POST later
+	mux.Get("/choose-room/{id}", handlers.Repo.ChooseRoom)
 
+	mux.Post("/reservations-room", handlers.Repo.PostReservationsRoom)
+
+	// Confirm Reservation with form
 	mux.Get("/confirm", handlers.Repo.Confirm)
+	mux.Post("/confirm", handlers.Repo.PostConfirm)
+
+	// Reservation Summary
+	mux.Get("/summary", handlers.Repo.Summary)
+
 	mux.Get("/contact", handlers.Repo.Contact)
 
 	// Serve up static content from the ./static/* directory

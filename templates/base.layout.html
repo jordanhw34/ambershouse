@@ -262,6 +262,18 @@
         });
       }
 
+      {{ with .Flash }}
+      notify("success", "{{.}}")
+      {{end}}
+
+      {{ with .Error }}
+      notify("error", "{{.}}")
+      {{end}}
+
+      {{ with .Warning }}
+      notify("warning", "{{.}}")
+      {{end}}
+
       //   const elem2 = document.getElementById("fooBar");
       //   const rangepicker2 = new DateRangePicker(elem2, {
       //     // ...options

@@ -1,5 +1,7 @@
 package models
 
+import "github.com/jordanhw34/ambershouse/internal/forms"
+
 // This only exists to be imported by other packages
 
 // TemplateData => Holds data sent from handlers to templates
@@ -12,4 +14,5 @@ type TemplateData struct {
 	Flash     string
 	Warning   string
 	Error     string
+	Form      *forms.Form
 }

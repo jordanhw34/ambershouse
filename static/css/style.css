@@ -22,3 +22,7 @@
   .notie-textbox {
     padding: 5px;
   }
+
+  .form-error {
+    color: red;
+  }
