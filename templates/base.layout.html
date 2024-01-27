@@ -86,8 +86,30 @@
             <a class="nav-link" href="/contact">Contact</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/confirm">Confirm</a>
-          </li>
+            {{if eq .IsAuthenticated true}}
+            <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  id="navbarDropdownMenuLink"
+                  role="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Admin
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" href="/admin/dashboard">Dashboard</a>
+                  <a class="dropdown-item" href="/user/logout">Logout</a>
+                </div>
+              </li>
+            {{else}}
+              <li class="nav-item">
+                <a class="nav-link" href="/user/login">Login</a>
+              </li>
+            {{end}}
+            
         </ul>
       </div>
     </nav>
@@ -119,148 +141,16 @@
     <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
     <script src="https://unpkg.com/notie"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/static/js/app.js"></script>
 
     <script>
-      // Example starter JavaScript for disabling form submissions if there are invalid fields
-      // Leaving this on base.layout.html so is available to any/all forms
-      (() => {
-        "use strict";
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        const forms = document.querySelectorAll(".needs-validation");
-        // Loop over them and prevent submission
-        Array.from(forms).forEach((form) => {
-          form.addEventListener(
-            "submit",
-            (event) => {
-              if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-              }
-
-              form.classList.add("was-validated");
-            },
-            false
-          );
-        });
-      })();
-
-      function Prompt() {
-        let toast = (c) => {
-          const {
-            title = "",
-            icon = "success",
-            position = "top-end", // top-start, top-center, top-end
-          } = c;
-
-          const Toast = Swal.mixin({
-            toast: true,
-            title: title,
-            position: position,
-            icon: icon,
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            },
-          });
-          Toast.fire({});
-        };
-
-        let success = (c) => {
-          const { title = "", text = "" } = c;
-          Swal.fire({
-            icon: "success",
-            title: title,
-            text: text,
-          });
-        };
-
-        let error = (c) => {
-          const { title = "", text = "" } = c;
-          Swal.fire({
-            icon: "error",
-            title: title,
-            text: text,
-          });
-        };
-
-        let custom = async (c) => {
-          const { title = "Def Mult Inputs", html = "" } = c;
-
-          const { value: result } = await Swal.fire({
-            title: title,
-            html: html,
-            focusConfirm: true,
-            backdrop: true,
-            showCancelButton: true,
-            preConfirm: () => {
-              return [
-                document.getElementById("start").value,
-                document.getElementById("end").value,
-              ];
-            },
-            willOpen: () => {
-              if (c.willOpen !== undefined) {
-                c.willOpen();
-              }
-            },
-            didOpen: () => {
-              if (c.didOpen !== undefined) {
-                c.didOpen();
-              }
-            },
-          });
-
-          if (result) {
-            //Swal.fire(JSON.stringify(formValues));
-            if (result.dismiss === Swal.DismissReason.cancel) {
-              if (result.value !== "") {
-                if (c.callback !== undefined) {
-                  c.callback(result);
-                }
-              } else {
-                c.callback(false);
-              }
-            } else {
-              c.callback(false);
-            }
-          }
-        };
-
-        return {
-          toast: toast,
-          success: success,
-          error: error,
-          custom: custom,
-        };
-      }
-
-      function notify(msgType, msg) {
-        notie.alert({
-          //type: Number|String, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
-          type: msgType,
-          text: msg,
-          stay: false,
-          time: 2,
-          position: "top",
-        });
-      }
-
+      
       //   let notifyBtn = document.getElementById("notify");
       //   notifyBtn.addEventListener("click", () => {
       //     notify("warning", "This worked, woo hoo!");
       //   });
 
-      function notifyModal(title, text, icon, confirmButtonText) {
-        Swal.fire({
-          title: title,
-          text: text,
-          icon: icon,
-          confirmButtonText: confirmButtonText,
-        });
-      }
+      
 
       {{ with .Flash }}
       notify("success", "{{.}}")

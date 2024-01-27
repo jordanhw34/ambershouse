@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"testing"
 	"text/template"
 	"time"
 
@@ -14,7 +15,6 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jordanhw34/ambershouse/internal/config"
-	"github.com/jordanhw34/ambershouse/internal/drivers"
 	"github.com/jordanhw34/ambershouse/internal/models"
 	"github.com/jordanhw34/ambershouse/internal/render"
 	"github.com/justinas/nosurf"
@@ -24,8 +24,9 @@ var app config.AppConfig
 var session *scs.SessionManager
 var pathToTemplates = "./../../templates"
 
-func getRoutes() http.Handler {
+//var functions = template.FuncMap{}
 
+func TestMain(m *testing.M) {
 	gob.Register(models.Reservation{})
 
 	app.InProduction = false
@@ -45,13 +46,11 @@ func getRoutes() http.Handler {
 
 	app.Session = session
 
-	// Connect to DB
-	log.Println("Attemping to connect to DB...")
-	db, err := drivers.ConnectSQL("host=localhost port=5432 dbname=connect_db user=postgres password=password")
-	if err != nil {
-		log.Fatal("cannot connect to DB", err)
-		return nil
-	}
+	mailChan := make(chan models.MailData)
+	app.MailChan = mailChan
+	defer close(mailChan)
+
+	listenForMail()
 
 	templateCache, err := CreateTestTemplateCache()
 	if err != nil {
@@ -62,9 +61,24 @@ func getRoutes() http.Handler {
 	app.TemplateCache = templateCache
 	app.UseCache = true
 
-	repo := NewRepo(&app, db)
+	repo := NewTestingRepo(&app)
 	NewHandlers(repo)
 	render.NewRenderer(&app)
+
+	os.Exit(m.Run())
+}
+
+// listenForMail
+func listenForMail() {
+	go func() {
+		for {
+			<-app.MailChan
+		}
+	}()
+}
+
+// getRoutes is used for testing the handlers
+func getRoutes() http.Handler {
 
 	// NOW routes()
 	mux := chi.NewRouter()

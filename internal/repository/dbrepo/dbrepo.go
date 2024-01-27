@@ -12,10 +12,23 @@ type dbPostresRepo struct {
 	DB  *sql.DB
 }
 
+type dbTestRepo struct {
+	App *config.AppConfig
+	DB  *sql.DB
+}
+
+// NewPostgresRepo creates a new repository to hold the connection to our Postgres Database
 func NewPostgresRepo(db *sql.DB, app *config.AppConfig) repository.DatabaseRepo {
 	return &dbPostresRepo{
 		App: app,
 		DB:  db,
+	}
+}
+
+// NewDBTestRepo creates a new repository to hold the connection for testing
+func NewDBTestRepo(app *config.AppConfig) repository.DatabaseRepo {
+	return &dbTestRepo{
+		App: app,
 	}
 }
 

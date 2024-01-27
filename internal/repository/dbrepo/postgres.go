@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/jordanhw34/ambershouse/internal/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // Dummy function to show how we can access in handlers
@@ -72,8 +73,8 @@ func (m *dbPostresRepo) InsertRoomRestriction(r models.RoomRestriction) error {
 // AvailableByRoomIDAndDates returns bool and error given a RoomID and startDate and endDate
 func (m *dbPostresRepo) AvailableByRoomIDAndDates(startDate, endDate time.Time, roomID int) (bool, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	var numRows int
 	defer cancel()
+	var numRows int
 
 	query := `
 		select count(id) 
@@ -98,8 +99,8 @@ func (m *dbPostresRepo) AvailableByRoomIDAndDates(startDate, endDate time.Time, 
 // AvailableByDates returns a slice of available rooms for a given date range
 func (m *dbPostresRepo) AvailableByDates(startDate, endDate time.Time) ([]models.Room, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	var rooms []models.Room
 	defer cancel()
+	var rooms []models.Room
 
 	query := `
 		select r.id, r.room_name
@@ -109,7 +110,7 @@ func (m *dbPostresRepo) AvailableByDates(startDate, endDate time.Time) ([]models
 
 	rows, err := m.DB.QueryContext(ctx, query, startDate, endDate)
 	if err != nil {
-		return nil, err
+		return rooms, err
 	}
 
 	defer rows.Close()
@@ -118,14 +119,99 @@ func (m *dbPostresRepo) AvailableByDates(startDate, endDate time.Time) ([]models
 		var room models.Room
 		err := rows.Scan(&room.ID, &room.RoomName)
 		if err != nil {
-			return nil, err
+			return rooms, err
 		}
 		rooms = append(rooms, room)
 	}
 
 	err = rows.Err()
 	if err != nil {
-		return nil, err
+		return rooms, err
 	}
 	return rooms, nil
+}
+
+// GetRoomByID returns a Room given an ID
+func (m *dbPostresRepo) GetRoomByID(id int) (models.Room, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	var room models.Room
+
+	query := `select id, room_name, created_at, updated_at from rooms where id = $1`
+
+	row := m.DB.QueryRowContext(ctx, query, id)
+	err := row.Scan(
+		&room.ID,
+		&room.RoomName,
+		&room.CreatedAt,
+		&room.UpdatedAt,
+	)
+	if err != nil {
+		return room, err
+	}
+
+	return room, nil
+}
+
+// GetUserByID returns a User by ID
+func (m *dbPostresRepo) GetUserByID(id int) (models.User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	query := `select id, first_name, last_name, email, password, access_level, created_at, updated_at from users where id = $1`
+
+	row := m.DB.QueryRowContext(ctx, query, id)
+
+	var u models.User
+	err := row.Scan(
+		&u.ID,
+		&u.FirstName,
+		&u.LastName,
+		&u.Email,
+		&u.Password,
+		&u.AccessLevel,
+		&u.CreatedAt,
+		&u.UpdatedAt,
+	)
+	if err != nil {
+		return u, err
+	}
+	return u, nil
+}
+
+// UpdateUser in the database given a User object
+func (m *dbPostresRepo) UpdateUser(u models.User) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	query := `update users set first_name = $1, last_name = $2, access_level = $3, updated_at = $4`
+
+	_, err := m.DB.ExecContext(ctx, query, u.FirstName, u.LastName, u.AccessLevel, time.Now())
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Authenticate a user using bcrypt
+func (m *dbPostresRepo) Authenticate(email, testPassword string) (int, string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	var id int
+	var hashedPassword string
+
+	row := m.DB.QueryRowContext(ctx, "select id, password from users where email = $1", email)
+	err := row.Scan(&id, &hashedPassword)
+	if err != nil {
+		return id, "", err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(testPassword))
+	if err == bcrypt.ErrMismatchedHashAndPassword {
+		return id, "", bcrypt.ErrMismatchedHashAndPassword
+	} else if err != nil {
+		return id, "", err
+	}
+	return id, hashedPassword, nil
 }

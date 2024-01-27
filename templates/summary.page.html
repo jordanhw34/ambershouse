@@ -6,6 +6,9 @@
 <div class="row">
   <div class="col">
     <h1 class="mt-5">Reservation Summary</h1>
+    <p>
+        We look forward to seeing you!
+    </p>
 
     <hr />
 
@@ -20,15 +23,15 @@
             </tr>
             <tr>
                 <td>Room:</td>
-                <td>{{$res.RoomID}}</td>
+                <td>{{$res.Room.RoomName}}</td>
             </tr>
             <tr>
                 <td>Arrival:</td>
-                <td>{{$res.StartDate}}</td>
+                <td>{{index .StringMap "start_date"}}</td>
             </tr>
             <tr>
                 <td>Departure:</td>
-                <td>{{$res.EndDate}}</td>
+                <td>{{index .StringMap "end_date"}}</td>
             </tr>
             <tr>
                 <td>Email:</td>

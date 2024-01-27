@@ -5,6 +5,7 @@ import (
 	"text/template"
 
 	"github.com/alexedwards/scs/v2"
+	"github.com/jordanhw34/ambershouse/internal/models"
 )
 
 // This package should be imported where it needs to be
@@ -18,4 +19,6 @@ type AppConfig struct {
 	ErrorLog      *log.Logger
 	InProduction  bool
 	Session       *scs.SessionManager
+	DateFormat    string
+	MailChan      chan models.MailData
 }

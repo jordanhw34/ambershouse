@@ -40,6 +40,19 @@ func main() {
 
 	defer db.SQL.Close()
 
+	defer close(app.MailChan)
+
+	log.Println(" > Starting Email Listener Channel...")
+	listenForMail()
+
+	// Send Mail Capability
+	// from := "me@here.com"
+	// auth := smtp.PlainAuth("", from, "", "localhost")
+	// err = smtp.SendMail("localhost:1025", auth, from, []string{"you@there.com"}, []byte("Hello this is the body"))
+	// if err != nil {
+	// 	log.Println("Error sending email", err)
+	// }
+
 	log.Println(" > Attemping to start server on port", port)
 
 	server := &http.Server{
@@ -61,6 +74,12 @@ func run() (*drivers.DB, error) {
 	gob.Register(models.User{})
 	gob.Register(models.Room{})
 	gob.Register(models.Restriction{})
+
+	mailChan := make(chan models.MailData)
+	app.MailChan = mailChan
+
+	// Set globally the format string to convert time.Time to YYYY-MM-DD
+	app.DateFormat = "2006-01-02"
 
 	// Change this to true when in product
 	app.InProduction = false

@@ -35,20 +35,20 @@
   let checkBtn = document.getElementById("check-availability-button");
   checkBtn.addEventListener("click", () => {
     let html = `
-      <form id="check-availability-form" action="" method="post" novalidate class="needs-validation">
-          <div id="reservation-dates-modal" class="form-row">
-              <div class="col">
-                  <label for="start" class="form-label">Check-in Date</label>
-                  <input disabled required class="form-control" type="text" name="start" id="start" />
-              </div>
-              <div class="col">
-                  <label for="end" class="form-label">Check-out Date</label>
-                  <input disabled required class="form-control" type="text" name="end" id="end" />
-              </div>
-          </div>
-      </form>
-      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-      `;
+    <form id="check-availability-form" action="" method="post" novalidate class="needs-validation">
+        <div id="reservation-dates-modal" class="form-row">
+            <div class="col">
+                <label for="start" class="form-label">Check-in Date</label>
+                <input disabled required class="form-control" type="text" name="start" id="start" />
+            </div>
+            <div class="col">
+                <label for="end" class="form-label">Check-out Date</label>
+                <input disabled required class="form-control" type="text" name="end" id="end" />
+            </div>
+        </div>
+    </form>
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    `;
 
     attention.custom({
       title: "Check for available dates",
@@ -58,6 +58,7 @@
         const rangePicker2 = new DateRangePicker(popupForm, {
           format: "yyyy-mm-dd",
           showOnFocus: true,
+          minDate: new Date(),
         });
       },
       didOpen: () => {
@@ -74,6 +75,9 @@
         // appending token to the formData instead of adding hidden input field
         formData.append("csrf_token", "{{.CSRFToken}}");
 
+        // CHANGE THIS FOR FRODO's ROOM to 2
+        formData.append("room_id", "1");
+
         fetch("reservations-room", {
           method: "post",
           body: formData,
@@ -81,8 +85,29 @@
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
-            console.log(data.ok);
-            console.log(data.message);
+            if (data.ok) {
+              console.log("room is available for those date");
+              attention.custom({
+                title: "Great News!",
+                html:
+                  '<p>Room is available</p> <a href="/confirm-room?id=' +
+                  data.room_id +
+                  "&s=" +
+                  data.start_date +
+                  "&e=" +
+                  data.end_date +
+                  '" class="btn btn-primary">Book Now!</a>',
+                showConfirmButton: false,
+                showCancelButton: true,
+              });
+            } else {
+              console.log("room is not available for those dates");
+              // attention.error({
+              //     title: "Error",
+              //     text: "No availability for those dates",
+              // });
+              notify("error", "room is not available for those dates");
+            }
           });
       },
     });

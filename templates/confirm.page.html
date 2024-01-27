@@ -8,20 +8,20 @@
       {{$res := index .Data "reservation"}}
 
 
-        <strong>Reservation Details:</strong><br />
+        <strong>Reservation Details:</strong> <br />
         Arrival: {{index .StringMap "start_date"}} <br />
         Departure: {{index .StringMap "end_date"}} <br />
-        Room ID: {{$res.RoomID}}
+        Room ID: {{$res.RoomID}} <br />
+        Room Name: {{$res.Room.RoomName}}
 
 
-      <form method="post" action="/confirm" class="" novalidate>
         {{/* Temporarily disabling client side validation */}}
         <form
           method="post"
           action="/confirm"
           class="needs-validation"
           novalidate
-        ></form>
+        >
 
 
         <input type="hidden" name="csrf_token" value="{{.CSRFToken}}" />
